@@ -1,53 +1,42 @@
-let currentPage = "logs";
+function showPage(page) {
 
-async function loadStats() {
-  const res = await fetch("/api/stats");
-  const data = await res.json();
+  const content = document.getElementById("content");
 
-  document.getElementById("stats").innerHTML = `
-    📊 Servers: ${data.servers} |
-    👥 Users: ${data.users} |
-    📡 Ping: ${data.ping}ms
-  `;
-}
+  if (page === "home") {
+    content.innerHTML = "<h1>Welcome to CashMoneyGoats Dashboard</h1>";
+  }
 
-async function loadLogs() {
-  const res = await fetch("/api/logs");
-  const data = await res.json();
-
-  document.getElementById("content").innerHTML = data.map(log => `
-    <div class="card">
-      <b>${log.type}</b><br>
-      🏠 ${log.name}<br>
-      🆔 ${log.id}<br>
-      👥 ${log.members || "N/A"}<br>
-      📅 ${new Date(log.time).toLocaleString()}
-    </div>
-  `).join("");
-}
-
-function loadPage(page) {
-  currentPage = page;
+  if (page === "info") {
+    content.innerHTML = "<h2>Bot Info</h2><p>Live stats will connect soon...</p>";
+  }
 
   if (page === "logs") {
-    document.getElementById("title").innerText = "📥 Server Logs";
-    loadLogs();
-  }
-
-  if (page === "stats") {
-    document.getElementById("title").innerText = "⚙️ Bot Stats";
-    loadStats();
+    content.innerHTML = "<h2>Server Logs</h2><p>Waiting for bot data...</p>";
   }
 }
 
-setInterval(() => {
-  if (currentPage === "logs") {
-    loadLogs();
-  }
+function openOwnerConfig() {
+  document.getElementById("ownerModal").style.display = "block";
+}
 
-  if (currentPage === "stats") {
-    loadStats();
-  }
-}, 3000);
+function closeModal() {
+  document.getElementById("ownerModal").style.display = "none";
+}
 
-loadPage("logs");
+function checkCode() {
+
+  const code = document.getElementById("codeInput").value;
+
+  if (code === "2027") {
+    document.getElementById("content").innerHTML = `
+      <h1>Owner Config Panel</h1>
+      <p>Welcome owner 👑</p>
+      <p>Bot controls coming soon...</p>
+    `;
+    closeModal();
+  } else {
+    alert("Wrong code");
+  }
+}
+
+showPage("home");
