@@ -13,12 +13,18 @@ let botStats = {
   ping: 0
 };
 
-app.get("/api/logs", (req, res) => {
-  res.json(logs);
+// =====================
+// WEBSITE ROUTE
+// =====================
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/api/stats", (req, res) => {
-  res.json(botStats);
+// =====================
+// API - LOGS
+// =====================
+app.get("/api/logs", (req, res) => {
+  res.json(logs);
 });
 
 app.post("/api/log", (req, res) => {
@@ -31,11 +37,23 @@ app.post("/api/log", (req, res) => {
   res.sendStatus(200);
 });
 
+// =====================
+// API - BOT STATS
+// =====================
+app.get("/api/stats", (req, res) => {
+  res.json(botStats);
+});
+
 app.post("/api/stats", (req, res) => {
   botStats = req.body;
   res.sendStatus(200);
 });
 
-app.listen(3000, () => {
-  console.log("Dashboard running on http://localhost:3000");
+// =====================
+// RAILWAY FIXED PORT
+// =====================
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Dashboard running on port ${PORT}`);
 });
