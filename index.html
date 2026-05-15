@@ -7,6 +7,18 @@
 </head>
 <body>
 
+<div class="menu-button" onclick="toggleMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <a href="#main">Main Menu</a>
+  <a href="https://sites.google.com/view/asapstatus/home?authuser=1" target="_blank">Visit Update Site</a>
+  <a href="#" onclick="ownerAccess()">Owner Only</a>
+</div>
+
   <div class="background"></div>
 
   <header>
@@ -95,6 +107,22 @@
   <footer>
     <p>Made with 💎 by @gabrielthegoatlmao</p>
   </footer>
+
+<script>
+function toggleMenu() {
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+function ownerAccess() {
+  let pass = prompt("Enter Owner Passcode:");
+  if (pass === "111407") {
+    alert("Access granted!");
+    // later you can redirect or open bot panel here
+  } else {
+    alert("Wrong passcode!");
+  }
+}
+</script>
 
 </body>
 </html>
