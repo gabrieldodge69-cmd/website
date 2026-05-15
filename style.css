@@ -120,8 +120,15 @@ p {
   gap: 20px;
   padding: 20px;
 }
-.card-purple {
-  background: rgba(128, 0, 128, 0.1); /* Light purple with transparency */
-  border: 1px solid #800080; /* Border matching purple */
-  box-shadow: 0 0 20px rgba(128,0,128,0.7); /* Purple glow */
+.button-purple {
+  background: #4b0082; /* Dark purple */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.button-purple:hover {
+  background: #3a0070; /* Slightly lighter purple on hover */
 }
