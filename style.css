@@ -120,3 +120,8 @@ p {
   gap: 20px;
   padding: 20px;
 }
+.card-purple {
+  background: rgba(128, 0, 128, 0.1); /* Light purple with transparency */
+  border: 1px solid #800080; /* Border matching purple */
+  box-shadow: 0 0 20px rgba(128,0,128,0.7); /* Purple glow */
+}
