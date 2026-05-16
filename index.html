@@ -26,6 +26,39 @@
     <p>The Ultimate Rap Hub Dashboard</p>
   </header>
 
+<!-- OWNER PAGE (HIDDEN BY DEFAULT) -->
+<section id="ownerPage" style="display:none;">
+
+  <header>
+    <h1>🔐 Owner Dashboard</h1>
+    <p>Private control panel</p>
+  </header>
+
+  <section class="container">
+
+    <div class="card glow">
+      <h2>📊 Bot Status</h2>
+      <p>Online / Offline: Coming soon</p>
+    </div>
+
+    <div class="card highlight">
+      <h2>⚙️ Server Settings</h2>
+      <p>Manage roles, keywords, and config</p>
+    </div>
+
+    <div class="card glow">
+      <h2>📡 Logs</h2>
+      <p>Recent bot activity will appear here</p>
+    </div>
+
+  </section>
+
+  <button class="button-purple" onclick="showMain()">
+  Back to Main
+</button>
+
+</section>
+
   <section class="container">
 
     <!-- SERVER INFO FIRST -->
@@ -115,12 +148,35 @@ function toggleMenu() {
 
 function ownerAccess() {
   let pass = prompt("Enter Owner Passcode:");
+
   if (pass === "111407") {
-    alert("Access granted!");
-    // later you can redirect or open bot panel here
+
+    document.querySelectorAll(
+      'header, .container, .custom-text, .projects-section, footer'
+    ).forEach(el => {
+      if (!el.closest("#ownerPage")) {
+        el.style.display = "none";
+      }
+    });
+
+    document.getElementById("ownerPage").style.display = "block";
+
   } else {
     alert("Wrong passcode!");
   }
+}
+
+function showMain() {
+
+  document.querySelectorAll(
+    'header, .container, .custom-text, .projects-section, footer'
+  ).forEach(el => {
+    if (!el.closest("#ownerPage")) {
+      el.style.display = "";
+    }
+  });
+
+  document.getElementById("ownerPage").style.display = "none";
 }
 </script>
 
