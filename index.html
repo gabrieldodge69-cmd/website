@@ -21,7 +21,7 @@
 </div>
 
 <div class="sidebar" id="sidebar">
-  <a href="#main">Main Menu</a>
+  <a href="#" onclick="showLibrary()">Library</a>
   <a href="https://sites.google.com/view/asapstatus/home?authuser=1" target="_blank">Visit Update Site</a>
   <a href="#" onclick="ownerAccess()">Owner Only</a>
 </div>
@@ -193,6 +193,41 @@ function unlock() {
   document.getElementById("gate").style.display = "none";
   document.getElementById("site").style.display = "block";
 }
+
+function showLibrary() {
+  document.querySelectorAll(
+    'header, .container, .custom-text, .projects-section, footer'
+  ).forEach(el => el.style.display = "none");
+
+  document.getElementById("ownerPage").style.display = "none";
+  document.getElementById("libraryPage").style.display = "block";
+}
+
+function showMainFromLibrary() {
+  document.querySelectorAll(
+    'header, .container, .custom-text, .projects-section, footer'
+  ).forEach(el => el.style.display = "");
+
+  document.getElementById("libraryPage").style.display = "none";
+  document.getElementById("ownerPage").style.display = "none";
+}
+
+function searchLibrary() {
+  let input = document.getElementById("librarySearch");
+  let filter = input.value.toLowerCase();
+  let items = document.getElementsByClassName("library-item");
+
+  for (let i = 0; i < items.length; i++) {
+    let text = items[i].innerText.toLowerCase();
+
+    if (text.includes(filter)) {
+      items[i].style.display = "";
+    } else {
+      items[i].style.display = "none";
+    }
+  }
+}
+  
 </script>
 
 </div>
