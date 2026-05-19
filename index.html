@@ -7,6 +7,13 @@
 </head>
 <body>
 
+<div id="gate">
+  <h2>Verify you are human</h2>
+  <button onclick="unlock()">I am not a bot</button>
+</div>
+
+<div id="site" style="display:none;">
+
 <div class="menu-button" onclick="toggleMenu()">
   <div></div>
   <div></div>
@@ -181,7 +188,13 @@ function showMain() {
 
   document.getElementById("ownerPage").style.display = "none";
 }
+
+function unlock() {
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("site").style.display = "block";
+}
 </script>
 
+</div>
 </body>
 </html>
