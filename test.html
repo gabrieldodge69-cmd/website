@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GabrielTheGoatStudios // Production Interface</title>
+  
+  <meta name="description" content="Official portal for GabrielTheGoatStudios & CashMoneyGoats community infrastructure. Crafting advanced Discord automation and custom entertainment grids.">
+  <meta property="og:title" content="GabrielTheGoatStudios">
+  <meta name="theme-color" content="#22d3ee">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+    :root {
+      --neon-cyan: #00f2ff;
+      --neon-purple: #bd00ff;
+      --neon-green: #39ff14;
+      --bg-matte: #030303;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-matte);
+      color: #ffffff;
+      position: relative;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Core Architectural Neon Elements (No Box Borders) */
+    .glow-cyan {
+      text-shadow: 0 0 10px rgba(0, 242, 255, 0.6), 0 0 20px rgba(0, 242, 255, 0.3);
+    }
+    .glow-purple {
+      text-shadow: 0 0 10px rgba(189, 0, 255, 0.6), 0 0 20px rgba(189, 0, 255, 0.3);
+    }
+
+    /* Seamless Fluid Layout System - Eliminating traditional blocky borders */
+    .fluid-layer {
+      position: relative;
+      background: transparent;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .fluid-layer::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+    }
+
+    /* Tab Layer Transitions */
+    .view-pane {
+      opacity: 0;
+      transform: scale(0.995) translateY(5px);
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    .view-pane.active-view {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Global Dynamic UI Active States */
+    .active-tab {
+      color: var(--neon-cyan) !important;
+      text-shadow: 0 0 8px var(--neon-cyan);
+      border-bottom: 2px solid var(--neon-cyan);
+    }
+
+    .active-filter {
+      background-color: rgba(0, 242, 255, 0.08) !important;
+      color: #00f2ff !important;
+      border-bottom: 2px solid #00f2ff !important;
+    }
+
+    /* Custom Stream Layout Scrollers */
+    .custom-scroller::-webkit-scrollbar {
+      width: 3px;
+    }
+    .custom-scroller::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroller::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 99px;
+    }
+
+    /* Live Feed Pulsing Utility Indicator */
+    .pulse-node {
+      box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.7);
+      animation: pulse-ring 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    @keyframes pulse-ring {
+      to { box-shadow: 0 0 0 10px rgba(0, 242, 255, 0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden antialiased pt-28 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
+
+  <nav class="fixed top-0 left-0 w-full z-50 px-6 py-5 bg-black/95 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <button onclick="switchView('identity')" class="text-xl font-black tracking-tight glow-cyan text-[#00f2ff] uppercase font-display">GABRIELTHEGOATSTUDIOS</button>
+    </div>
+    
+    <div class="hidden md:flex items-center gap-6 text-[11px] font-mono font-bold tracking-[0.15em]">
+      <button id="tab-identity" onclick="switchView('identity')" class="px-3 py-2 text-gray-400 hover:text-white transition-all uppercase">The Identity</button>
+      <button id="tab-server" onclick="switchView('server')" class="px-3 py-2 text-gray-400 hover:text-white transition-all uppercase flex items-center gap-1.5">
+        <i class="fas fa-server text-[9px]"></i> Server Hub
+      </button>
+      <button id="tab-library" onclick="switchView('library')" class="px-3 py-2 text-gray-400 hover:text-white transition-all uppercase flex items-center gap-1.5">
+        <i class="fas fa-folder-open text-[9px]"></i> Project Vault
+      </button>
+    </div>
+
+    <div class="hidden md:flex items-center gap-3 font-mono">
+      <div id="auth-user-badge" class="hidden items-center gap-1.5 px-3 py-1.5 bg-zinc-950/50 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Linked
+      </div>
+      <button id="auth-modal-trigger" onclick="toggleAuthModal(true)" class="px-4 py-2 text-xs font-bold tracking-widest text-cyan-400 border border-cyan-400/40 bg-cyan-950/10 rounded-full hover:bg-cyan-400 hover:text-black transition-all uppercase">
+        Link Session Signature
+      </button>
+    </div>
+
+    <button id="menu-toggle" class="md:hidden text-gray-400 hover:text-white transition-colors">
+      <i class="fas fa-bars text-lg"></i>
+    </button>
+
+    <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-black/95 border-b border-white/5 flex flex-col items-center gap-5 py-6 font-mono font-bold text-xs tracking-widest text-gray-400 backdrop-blur-lg uppercase">
+      <button onclick="switchView('identity'); toggleMobileMenu()" class="hover:text-cyan-400">The Identity</button>
+      <button onclick="switchView('server'); toggleMobileMenu()" class="hover:text-purple-400">Server Hub</button>
+      <button onclick="switchView('library'); toggleMobileMenu()" class="hover:text-cyan-400">Project Vault</button>
+    </div>
+  </nav>
+
+  <div id="auth-modal-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div class="w-full max-w-sm p-8 space-y-6 text-center">
+      <div>
+        <h3 class="text-sm font-mono font-bold text-cyan-400 uppercase tracking-wider">// INITIALIZE LINK PHASE</h3>
+        <p class="text-[9px] text-gray-500 font-mono mt-1">ESTABLISHING ENCRYPTED SESSION PERMIT MATRIX</p>
+      </div>
+
+      <form onsubmit="processClientAuthentication(event)" class="space-y-4 font-mono text-xs">
+        <input type="text" id="auth-username" required placeholder="Enter custom identity handle..." class="w-full bg-zinc-950 border-b border-white/20 focus:border-cyan-400 text-center py-3 text-white outline-none transition-all">
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 py-3 bg-cyan-500 text-black font-bold uppercase tracking-widest rounded-full transition-all">Synchronize</button>
+          <button type="button" onclick="toggleAuthModal(false)" class="px-5 py-3 border border-white/10 rounded-full text-gray-400 hover:text-white">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <main class="w-full flex-grow relative z-10">
+
+    <div id="view-identity" class="view-pane active-view max-w-6xl mx-auto px-6 py-6 space-y-24">
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center gap-2 text-[10px] font-mono font-bold tracking-[0.2em] text-cyan-400 uppercase">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Primary Core Telemetry
+        </div>
+        <h1 class="text-4xl md:text-6xl font-black tracking-tight uppercase glow-cyan text-[#00f2ff]">The Identity</h1>
+        <p class="text-xs font-mono text-gray-500 uppercase tracking-widest">// optimization metrics & development stack</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+        <div class="lg:col-span-2 space-y-6">
+          <p class="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-widest">// ARCHITECTURAL BLUEPRINT</p>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-tight font-display">gabrielthegoatlmao</h2>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Operating under the digital stamp of <span class="text-white font-semibold">GabrielTheGoatStudios</span>, I design lightweight application frameworks and automated bot ecosystems that support complex community networks.
+          </p>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            My design standard is built on keeping processing overhead low. By eliminating bloated sub-routines, handling heavy database logic safely in background workers, and focusing on high-speed response paths, my integrations maintain fast response times under heavy user activity.
+          </p>
+          
+          <div class="pt-6 border-t border-white/5 space-y-2">
+            <p class="text-[10px] font-mono text-gray-500 uppercase tracking-wider">Validated Integration Architecture:</p>
+            <div class="flex flex-wrap gap-2 text-[11px] font-mono text-gray-300">
+              <span class="px-3 py-1 bg-zinc-950 border border-white/5 rounded-full">Node.js Engine</span>
+              <span class="px-3 py-1 bg-zinc-950 border border-white/5 rounded-full text-cyan-400">Discord.js Framework</span>
+              <span class="px-3 py-1 bg-zinc-950 border border-white/5 rounded-full text-purple-400">Pycord Layer</span>
+              <span class="px-3 py-1 bg-zinc-950 border border-white/5 rounded-full text-emerald-400">MongoDB Clusters</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6 lg:border-l lg:border-white/5 lg:pl-8">
+          <div class="w-8 h-8 rounded-full bg-purple-950/40 border border-purple-500/30 flex items-center justify-center text-purple-400">
+            <i class="fas fa-microchip text-xs"></i>
+          </div>
+          <h3 class="text-md font-bold text-white uppercase font-display tracking-wider">Studio Objectives</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            To strip out heavy manual moderation tasks and replace them with rapid background logic. Automated community management handles growth effortlessly without causing system lag or processing bottlenecks.
+          </p>
+          <div class="text-[11px] font-mono space-y-1 pt-4 text-gray-500">
+            <div>SYSTEM // <span class="text-emerald-400 font-bold">OPERATIONAL</span></div>
+            <div>STATION // <span class="text-white">GT_GOAT_CORE_01</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="py-12 border-t border-b border-white/5 space-y-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <span class="text-[10px] font-mono tracking-widest text-cyan-400 uppercase block">// Interactive Simulation Array</span>
+            <h3 class="text-2xl font-black text-white uppercase font-display">Command Execution Playground</h3>
+            <p class="text-xs text-gray-400 mt-1">Select a command below to preview exact real-time engine processing loops and response formats.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 font-mono">
+            <button onclick="selectSimulatedCommand('add-status')" id="btn-sim-status" class="px-4 py-2 text-xs font-bold border border-cyan-400 text-cyan-400 rounded-full bg-cyan-950/20 shadow-[0_0_15px_rgba(0,242,255,0.1)] transition-all">/add-status</button>
+            <button onclick="selectSimulatedCommand('firewall')" id="btn-sim-firewall" class="px-4 py-2 text-xs font-bold border border-white/10 text-gray-400 rounded-full hover:border-purple-400 hover:text-purple-400 transition-all">/firewall-status</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div class="lg:col-span-4 bg-zinc-950/40 border border-white/5 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+            <div class="space-y-4">
+              <div class="text-xs font-mono text-purple-400 uppercase tracking-wider">// Parametric Configurations</div>
+              <h4 id="sim-title" class="text-lg font-bold text-white font-display">ASAP Status Module</h4>
+              <p id="sim-description" class="text-xs text-gray-400 leading-relaxed">Simulates the automatic reward dispatcher detecting a vanity server link inside a target user's custom status block.</p>
+            </div>
+            <button onclick="executeSimulatedCommand()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-black text-xs font-bold font-mono tracking-widest uppercase rounded-full hover:opacity-90 active:scale-95 transition-all">
+              Execute Command Node
+            </button>
+          </div>
+
+          <div class="lg:col-span-8 bg-black border border-white/10 rounded-2xl p-6 flex flex-col space-y-4 shadow-[2xl]">
+            <div class="flex items-center justify-between border-b border-white/5 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+              </div>
+              <span class="text-[10px] font-mono text-gray-600 tracking-widest uppercase">DISCORD_INTERFACE_EMULATOR</span>
+            </div>
+            <div id="simulator-terminal-feed" class="flex-grow min-h-[160px] max-h-[160px] overflow-y-auto custom-scroller font-mono text-xs text-gray-400 space-y-3 pr-2">
+              <div class="text-zinc-600">// Terminal stabilized. Ready to ingest execution requests...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-12">
+        <div class="text-center">
+          <span class="text-xs font-mono tracking-widest text-purple-400 uppercase">// Strategic Advantages</span>
+          <h2 class="text-3xl font-black uppercase font-display tracking-wider mt-1">Why Build With This Studio?</h2>
+          <p class="text-xs text-gray-500 font-mono tracking-widest uppercase mt-1">Engineering high-performance solutions engineered for scaling</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="fluid-layer pb-6 space-y-2">
+            <div class="text-xs font-mono text-cyan-400 uppercase tracking-wider">// Zero Structural Bloat</div>
+            <h4 class="text-lg font-bold text-white font-display">Low Overhead Processing</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Every integration runs clean event-driven patterns. By abandoning heavy middleware, event execution finishes faster, saving resources.</p>
+          </div>
+
+          <div class="fluid-layer pb-6 space-y-2">
+            <div class="text-xs font-mono text-purple-400 uppercase tracking-wider">// Threaded Offloading</div>
+            <h4 class="text-lg font-bold text-white font-display">Background Task Handling</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Heavy database transactions and API reporting calls move to separate background processes. The core message processing stays open and fast.</p>
+          </div>
+
+          <div class="fluid-layer pb-6 space-y-2">
+            <div class="text-xs font-mono text-pink-400 uppercase tracking-wider">// High Scale Capabilities</div>
+            <h4 class="text-lg font-bold text-white font-display">Native Cluster Scaling</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Built from day one to handle huge spikes in traffic. Node worker engines scale cleanly to split the user load across high-traffic hours.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-12 border-t border-white/5 space-y-12">
+        <div class="text-center space-y-1">
+          <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase">// Verification Sub-Registry</span>
+          <h3 class="text-2xl font-bold text-white font-display">Studio Performance Assessment Logs</h3>
+          <p class="text-xs text-gray-500 font-mono tracking-widest uppercase">Verified statements from framework coordinators</p>
+        </div>
+
+        <div class="max-w-xl mx-auto pt-4 font-mono text-xs">
+          <div id="studio-review-lockout" class="text-center space-y-3 py-4 text-gray-500 border-b border-dashed border-white/15">
+            <p>Review insertion terminal locked. Link an operator signature credential code parameter to proceed.</p>
+            <button onclick="toggleAuthModal(true)" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-cyan-400 border border-cyan-400/30 rounded-full hover:bg-cyan-400 hover:text-black transition-all">Link System Signature</button>
+          </div>
+
+          <form id="studio-review-form" onsubmit="appendStudioReviewNode(event)" class="hidden space-y-4">
+            <div class="flex flex-col sm:flex-row gap-4 border-b border-white/10 pb-4">
+              <div class="flex-1 space-y-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider">Active Operator Handle</label>
+                <div id="studio-review-active-sig" class="text-cyan-400 font-bold py-2">Guest</div>
+              </div>
+              <div class="flex-1 space-y-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider">Evaluation Rating Star Metric</label>
+                <select id="studio-review-stars" class="w-full bg-transparent border-b border-white/20 py-1.5 text-yellow-400 outline-none focus:border-cyan-400 transition-all">
+                  <option value="5" class="bg-black text-yellow-400">⭐⭐⭐⭐⭐ 5/5 Stars - Premium</option>
+                  <option value="4" class="bg-black text-yellow-400">⭐⭐⭐⭐ 4/5 Stars - High Stability</option>
+                  <option value="3" class="bg-black text-yellow-400">⭐⭐⭐ 3/5 Stars - Operational</option>
+                  <option value="2" class="bg-black text-yellow-400">⭐⭐ 2/5 Stars - Needs work</option>
+                  <option value="1" class="bg-black text-yellow-400">⭐ 1/5 Stars - Would not recommend</option>
+                </select>
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[9px] text-gray-500 uppercase tracking-wider">Log Transcript Statement</label>
+              <textarea id="studio-review-message" required rows="2" placeholder="Input studio deployment evaluation statement..." class="w-full bg-transparent border-b border-white/20 py-2 text-white outline-none focus:border-cyan-400 resize-none transition-all"></textarea>
+            </div>
+            <div class="text-right">
+              <button type="submit" class="px-6 py-2 bg-gradient-to-r from-cyan-600 to-purple-600 text-white font-bold tracking-widest uppercase rounded-full transition-all text-[11px]">Transmit Assessment</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="studio-reviews-feed" class="max-w-3xl mx-auto space-y-6 divide-y divide-white/5">
+          </div>
+      </div>
+    </div>
+
+    <div id="view-server" class="view-pane hidden max-w-5xl mx-auto px-6 py-6 space-y-24">
+      
+      <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
+        <h1 class="text-5xl sm:text-7xl font-black tracking-tight uppercase bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 font-display">
+          CashMoneyGoats<span class="text-purple-500">🐐🔥</span>
+        </h1>
+        <p class="text-xl md:text-2xl font-bold tracking-tight text-gray-200">
+          The only server for Music lovers and chatters
+        </p>
+        <p class="text-xs font-mono tracking-widest text-purple-400 uppercase">
+          Included with Fm.Bot and leveling &bull; Lets take a deep dive into this server...
+        </p>
+      </div>
+
+      <div class="py-10 border-t border-b border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div class="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left">
+            <span class="text-[10px] font-mono tracking-widest text-pink-400 uppercase mb-2">// Acoustic Showroom</span>
+            <h3 id="display-title" class="text-2xl font-black text-white font-display mb-1">Select Track Array</h3>
+            <p id="display-genre" class="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-6">Standby Mode</p>
+            
+            <audio id="core-audio-engine" src=""></audio>
+            
+            <div class="w-full max-w-xs mb-6">
+              <div class="flex justify-between text-[10px] text-gray-500 font-mono mb-1">
+                <span id="track-time-current">0:00</span>
+                <span id="track-time-duration">0:00</span>
+              </div>
+              <div id="track-progress-wrapper" class="w-full bg-white/10 h-1 rounded-full cursor-pointer relative overflow-hidden">
+                <div id="track-progress-fill" class="h-full bg-gradient-to-r from-purple-500 to-cyan-400 w-0 transition-all duration-100"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <button id="trigger-prev" class="text-gray-400 hover:text-white transition-colors text-sm focus:outline-none"><i class="fas fa-backward-step"></i></button>
+              <button id="trigger-play" class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center text-sm font-bold hover:scale-105 active:scale-95 transition-all focus:outline-none">
+                <i id="trigger-icon" class="fas fa-play ml-0.5"></i>
+              </button>
+              <button id="trigger-next" class="text-gray-400 hover:text-white transition-colors text-sm focus:outline-none"><i class="fas fa-forward-step"></i></button>
+            </div>
+          </div>
+
+          <div class="md:col-span-7 w-full">
+            <div class="space-y-1 max-h-[190px] overflow-y-auto custom-scroller pr-3" id="render-playlist-tracks">
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-16">
+        <div class="text-center">
+          <h2 class="text-3xl font-black uppercase font-display tracking-wider">WE HAVE EVERYTHING!</h2>
+          <div class="flex justify-center gap-6 text-xs font-mono text-gray-400 uppercase font-bold tracking-widest mt-3">
+            <span class="text-purple-400">Chat</span> &bull; <span class="text-pink-400">Vibe</span> &bull; <span class="text-cyan-400">Control</span> &bull; <span>Tools</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+          
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-cyan-400 mb-1 uppercase tracking-wider">// Social Parameters</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">We have the best community!</h4>
+            <p class="text-sm text-gray-400">We think you will like it. Live interaction loops with creative audio lovers and constant chat tracking metrics.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-purple-400 mb-1 uppercase tracking-wider">// Sovereign Matrix</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">You and your own rules</h4>
+            <p class="text-sm text-gray-400">Get notified of new subjects immediately. Control server dispatch configurations precisely to fit your custom requirements.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-pink-400 mb-1 uppercase tracking-wider">// Visual Presentation</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">Showcase yourself!</h4>
+            <p class="text-sm text-gray-400">Get self roles to express yourself explicitly. Showoff yourself in chat and highlight identity capabilities instantly.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-cyan-400 mb-1 uppercase tracking-wider">// Tracking Matrix</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">Leveling Infrastructure</h4>
+            <p class="text-sm text-gray-400">Included with FM Bot and custom profile leveling frameworks. Track music chart scrobbles right inside local room environments.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-purple-400 mb-1 uppercase tracking-wider">// Network Assurances</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">24/7 Support 🚩</h4>
+            <p class="text-sm text-gray-400">Available if you need it. High efficiency administrative teams remain active over systemic loops at all time intervals.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-pink-400 mb-1 uppercase tracking-wider">// Dynamic Gateway</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">No verification required!</h4>
+            <p class="text-sm text-gray-400">Unverified access parameters may lose isolated peripheral features, but everyone is welcome and everyone can chat flawlessly.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-purple-400 mb-1 uppercase tracking-wider">// System Arcade</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">Play Games!</h4>
+            <p class="text-sm text-gray-400">Perfect for deep adventures, collecting custom network items, tracking inventory milestones, and competitive activities.</p>
+          </div>
+
+          <div class="fluid-layer pb-6">
+            <div class="text-xs font-mono text-cyan-400 mb-1 uppercase tracking-wider">// Vocal Nodes</div>
+            <h4 class="text-lg font-bold text-white mb-2 font-display">Play music in ANY VC Channels!</h4>
+            <p class="text-sm text-gray-400">Features 2 dedicated custom music bots (<span class="text-white font-bold">Musico</span> and <span class="text-white font-bold">Rythm</span>) for you and your friends to enjoy music with. Manage tracks via an active Music Panel and VC Chat layouts for the ULTIMATE experience. <span class="text-cyan-400 text-xs font-bold font-mono">ALL FOR FREE!</span></p>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-white/5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <span class="text-xs font-mono text-purple-400 uppercase tracking-widest">// AUTOMATED SHIELD SYSTEMS</span>
+              <h3 class="text-xl font-bold text-white font-display mt-1">PREMIUM Moderation Infrastructure</h3>
+              <p class="text-xs text-gray-400 mt-1">Carl-Bot &bull; Sapphire &bull; Dyno &bull; Built-in verification system for the BEST secure experience.</p>
+            </div>
+            <div class="flex flex-wrap gap-3 font-mono text-[10px] font-bold text-gray-400 uppercase">
+              <span class="px-3 py-1.5 border border-white/10 rounded-full">Carl-Bot</span>
+              <span class="px-3 py-1.5 border border-purple-500/30 text-purple-300 rounded-full">Sapphire</span>
+              <span class="px-3 py-1.5 border border-white/10 rounded-full">Dyno Engine</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-white/5 space-y-4">
+          <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">// AUXILIARY PERIPHERALS // AND MUCH MORE!</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-gray-300">
+            <div class="flex items-center gap-2"><i class="fas fa-angle-right text-purple-500"></i> Download yt videos for FREE!</div>
+            <div class="flex items-center gap-2"><i class="fas fa-angle-right text-pink-500"></i> Edit images instantly inside chat</div>
+            <div class="flex items-center gap-2"><i class="fas fa-angle-right text-cyan-500"></i> Free ipa's + Tutorial on how to use them</div>
+            <div class="flex items-center gap-2"><i class="fas fa-angle-right text-purple-500"></i> Create your own custom dynamic VC room</div>
+            <div class="flex items-center gap-2"><i class="fas fa-angle-right text-pink-500"></i> Get automated hot daily memes every day!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-12 border-t border-white/5 space-y-6">
+        <div class="flex items-center justify-between font-mono">
+          <div>
+            <span class="text-[10px] tracking-widest text-cyan-400 uppercase block">// Live Terminal Logs</span>
+            <h3 class="text-lg font-bold text-white font-display">Inside CashMoneyGoats Feed</h3>
+          </div>
+          <div class="text-[10px] text-gray-500 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 pulse-node"></span> SIMULATED #GENERAL-CHAT RELAY
+          </div>
+        </div>
+        <div id="live-chat-terminal" class="space-y-4 max-h-[220px] overflow-y-auto custom-scroller pr-2 font-mono text-xs text-gray-400">
+          </div>
+      </div>
+
+      <div id="reviews-sector-anchor" class="pt-12 border-t border-white/5 space-y-12">
+        <div class="text-center space-y-1">
+          <span class="text-xs font-mono tracking-widest text-purple-400 uppercase">// Verification Sub-Registry</span>
+          <h3 class="text-2xl font-bold text-white font-display">Community Assessment Logs</h3>
+        </div>
+
+        <div class="max-w-xl mx-auto pt-4 font-mono text-xs">
+          <div id="review-lockout-alert" class="text-center space-y-3 py-4 text-gray-500 border-b border-dashed border-white/15">
+            <p>Review insertion terminal locked. Link an operator signature credential code parameter to proceed.</p>
+            <button onclick="toggleAuthModal(true)" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-cyan-400 border border-cyan-400/30 rounded-full hover:bg-cyan-400 hover:text-black transition-all">Link System Signature</button>
+          </div>
+
+          <form id="review-submission-form" onsubmit="appendUserReviewNode(event)" class="hidden space-y-4">
+            <div class="flex flex-col sm:flex-row gap-4 border-b border-white/10 pb-4">
+              <div class="flex-1 space-y-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider">Active Operator Handle</label>
+                <div id="review-active-signature" class="text-cyan-400 font-bold py-2">Guest</div>
+              </div>
+              <div class="flex-1 space-y-1">
+                <label class="text-[9px] text-gray-500 uppercase tracking-wider">Evaluation Rating Star Metric</label>
+                <select id="review-rating-stars" class="w-full bg-transparent border-b border-white/20 py-1.5 text-yellow-400 outline-none focus:border-cyan-400 transition-all">
+                  <option value="5" class="bg-black text-yellow-400">⭐⭐⭐⭐⭐ 5/5 Stars - Premium</option>
+                  <option value="4" class="bg-black text-yellow-400">⭐⭐⭐⭐ 4/5 Stars - High Stability</option>
+                  <option value="3" class="bg-black text-yellow-400">⭐⭐⭐ 3/5 Stars - Operational</option>
+                  <option value="2" class="bg-black text-yellow-400">⭐⭐ 2/5 Stars - Minor Bottlenecks</option>
+                  <option value="1" class="bg-black text-yellow-400">⭐ 1/5 Stars - Debug Required</option>
+                </select>
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[9px] text-gray-500 uppercase tracking-wider">Log Transcript Statement</label>
+              <textarea id="review-message" required rows="2" placeholder="Input user evaluation statement..." class="w-full bg-transparent border-b border-white/20 py-2 text-white outline-none focus:border-cyan-400 resize-none transition-all"></textarea>
+            </div>
+            <div class="text-right">
+              <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold tracking-widest uppercase rounded-full transition-all text-[11px]">Transmit Assessment</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="reviews-feed-container" class="max-w-3xl mx-auto space-y-6 divide-y divide-white/5">
+          </div>
+      </div>
+
+      <div class="text-center py-12 border-t border-white/5 space-y-6">
+        <h3 class="text-3xl font-black uppercase tracking-tight font-display">So why wait? Join up NOW!</h3>
+        <div class="pt-2">
+          a <a href="https://discord.gg/gQg4ps2Fen" target="_blank" class="px-8 py-4 text-xs font-bold tracking-widest uppercase bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-500 text-white rounded-full transition-all shadow-lg hover:scale-105 inline-block">
+            Establish Gateway Connection Node
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="view-library" class="view-pane hidden max-w-6xl mx-auto px-6 py-6 space-y-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-6">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 text-[10px] font-mono font-bold tracking-[0.2em] text-cyan-400 uppercase">
+            <i class="fas fa-folder-open text-[9px]"></i> Software Registry Core
+          </div>
+          <h2 class="text-4xl font-black tracking-tight uppercase glow-cyan text-[#00f2ff] font-display">Project Vault</h2>
+          <p class="text-xs font-mono text-gray-500 uppercase tracking-widest">// operational structural repository files catalog</p>
+        </div>
+
+        <div class="relative w-full md:w-72 font-mono">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-500 pointer-events-none text-xs">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" id="library-search" oninput="executeSearchMatrix()" placeholder="Filter code parameters..." class="w-full bg-transparent border-b border-cyan-400/40 text-xs rounded-none pl-7 pr-3 py-2 text-white outline-none focus:border-cyan-400 transition-all">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6 font-mono text-[10px] font-bold tracking-widest uppercase border-b border-white/5 pb-2">
+        <button id="filter-btn-popular" onclick="setProjectSectionFilter('popular')" class="active-filter pb-2 text-gray-400 hover:text-white transition-all">Popular Showcase</button>
+        <button id="filter-btn-all" onclick="setProjectSectionFilter('all')" class="pb-2 text-gray-400 hover:text-white transition-all">All Projects</button>
+      </div>
+
+      <div id="search-empty-alert" class="hidden text-center py-12 space-y-2 font-mono text-gray-500">
+        <i class="fas fa-triangle-exclamation text-sm text-yellow-600 animate-pulse"></i>
+        <p class="text-xs uppercase tracking-wider">0 Matching Code Architecture Units In Active Target Fields</p>
+      </div>
+
+      <div id="projects-container-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 items-stretch">
+        
+        <div class="library-card-wrapper fluid-layer pb-8 flex flex-col justify-between space-y-4" data-section="popular" data-id="asap-status" data-name="asap status discord bot moderation utility role reward status tracker">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <span class="font-bold text-cyan-400 tracking-wider uppercase">// HEADLINER PROJECT</span>
+              <span class="text-emerald-400 font-bold"><span class="inline-block w-1 h-1 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> v3.4.1</span>
+            </div>
+            
+            <div>
+              <h3 class="text-2xl font-black text-white uppercase tracking-tight font-display">ASAP Status</h3>
+              <p class="text-xs font-mono text-purple-400 uppercase tracking-wider mt-0.5">Automated Status Tracking Protocol</p>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-relaxed font-medium">
+              An optimization utility bot recommended for growing servers. It automatically detects custom phrases, social handles, or invite links inside member profile status messages and hands out rewards instantly.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 font-mono text-[10px] text-gray-400 pt-2">
+              <div><span class="text-gray-600 block text-[9px] uppercase">Engine Framework</span><span class="text-white font-bold">Node.js (Discord.js)</span></div>
+              <div><span class="text-gray-600 block text-[9px] uppercase">Main Engine DB</span><span class="text-white font-bold">MongoDB Cluster</span></div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center justify-between gap-4 font-mono text-xs">
+            <div class="flex gap-4 font-bold text-[11px]">
+              <a href="https://discord.com/oauth2/authorize?client_id=1500379202615119912&permissions=564601637514289&integration_type=0&scope=bot+applications.commands" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors uppercase tracking-wider"><i class="fab fa-discord mr-1"></i> Add Core</a>
+              <a href="https://github.com/gabrieldodge69-cmd/discordstatusbot.git" target="_blank" class="text-gray-500 hover:text-white transition-colors uppercase tracking-wider"><i class="fab fa-github mr-1"></i> Source</a>
+            </div>
+            
+            <div id="reaction-cluster-asap-status" class="flex items-center gap-3 text-[11px] text-gray-500">
+              <button onclick="triggerReactionControl('asap-status', 'like')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-up"></i> <span id="like-count-asap-status">0</span>
+              </button>
+              <button onclick="triggerReactionControl('asap-status', 'dislike')" class="hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-down"></i> <span id="dislike-count-asap-status">0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="library-card-wrapper fluid-layer pb-8 flex flex-col justify-between space-y-4 hidden" data-section="all" data-id="true-security" data-name="true security firewall encryption bot utility python defense secure">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <span class="font-bold text-purple-400 tracking-wider uppercase">// Perimeter Defense</span>
+              <span class="text-purple-400 font-bold"><i class="fas fa-lock text-[9px] mr-1"></i> v1.0.0 [Beta]</span>
+            </div>
+            
+            <div>
+              <h3 class="text-2xl font-black text-white uppercase tracking-tight font-display">True Security</h3>
+              <p class="text-xs font-mono text-purple-400 uppercase tracking-wider mt-0.5">Perimeter Protection Framework</p>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-relaxed font-medium">
+              Houses robust authorization gates designed to neutralize webhook token leaks and unexpected administration changes.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 font-mono text-[10px] text-gray-400 pt-2">
+              <div><span class="text-gray-600 block text-[9px] uppercase">Engine Framework</span><span class="text-white font-bold">Python (Pycord API)</span></div>
+              <div><span class="text-gray-600 block text-[9px] uppercase">Main Engine DB</span><span class="text-white font-bold">PostgreSQL Engine</span></div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center justify-between gap-4 font-mono text-xs">
+            <span class="text-zinc-600 uppercase tracking-wider text-[11px] font-bold"><i class="fas fa-lock mr-1.5"></i> Private Core</span>
+            
+            <div id="reaction-cluster-true-security" class="flex items-center gap-3 text-[11px] text-gray-500">
+              <button onclick="triggerReactionControl('true-security', 'like')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-up"></i> <span id="like-count-true-security">0</span>
+              </button>
+              <button onclick="triggerReactionControl('true-security', 'dislike')" class="hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-down"></i> <span id="dislike-count-true-security">0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="library-card-wrapper fluid-layer pb-8 flex flex-col justify-between space-y-4 hidden" data-section="all" data-id="audiolink-sync" data-name="audiolink sync music tracker soundcloud lastfm spotify">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <span class="font-bold text-emerald-400 tracking-wider uppercase">// Media Engine</span>
+              <span class="text-cyan-400 font-bold"><i class="fas fa-compact-disc text-[9px] mr-1"></i> v2.1.0</span>
+            </div>
+            
+            <div>
+              <h3 class="text-2xl font-black text-white uppercase tracking-tight font-display">AudioLink Sync</h3>
+              <p class="text-xs font-mono text-cyan-400 uppercase tracking-wider mt-0.5">Scrobble & Metadata Hub</p>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-relaxed font-medium">
+              Powers the deep audio logging arrays used to index tracks and share music charts directly across high-activity channels.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 font-mono text-[10px] text-gray-400 pt-2">
+              <div><span class="text-gray-600 block text-[9px] uppercase">Engine Framework</span><span class="text-white font-bold">Node.js Engine</span></div>
+              <div><span class="text-gray-600 block text-[9px] uppercase">Data Pipeline</span><span class="text-white font-bold">Last.fm / Spotify API</span></div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center justify-between gap-4 font-mono text-xs">
+            <a href="#" class="text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider text-[11px]">Documentation</a>
+            
+            <div id="reaction-cluster-audiolink-sync" class="flex items-center gap-3 text-[11px] text-gray-500">
+              <button onclick="triggerReactionControl('audiolink-sync', 'like')" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-up"></i> <span id="like-count-audiolink-sync">0</span>
+              </button>
+              <button onclick="triggerReactionControl('audiolink-sync', 'dislike')" class="hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <i class="fas fa-thumbs-down"></i> <span id="dislike-count-audiolink-sync">0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-white/5 py-12 text-center space-y-2 bg-black/40 w-full mt-24 relative z-10 font-mono">
+    <p class="text-lg font-black tracking-widest glow-cyan text-[#00f2ff] uppercase font-display">GABRIELTHEGOATSTUDIOS</p>
+    <p class="text-[9px] text-gray-600 uppercase tracking-wider">INTERFACE RENDER MATRIX TIMING EXECUTED // ALL CHANNELS STABILIZED</p>
+  </footer>
+
+  <script>
+    // System Persistence Mock Engine Layout Defaults
+    const DEFAULT_REACTIONS = {
+      'asap-status': { like: 84, dislike: 1 },
+      'true-security': { like: 39, dislike: 0 },
+      'audiolink-sync': { like: 62, dislike: 2 }
+    };
+
+    const DEFAULT_REVIEWS = [
+      {
+        user: "@Admin_TheHighWRLD",
+        stars: 5,
+        msg: "ASAP Status handled our custom role rewards perfectly. It completely automated our profile verification loop, and server engagement spikes instantly upon setup loops.",
+        badgeColor: "text-purple-400 font-bold"
+      },
+      {
+        user: "@VibeTracker_99",
+        stars: 5,
+        msg: "The custom music bot array configuration response times stay below 12ms under immense query processing load thresholds. Unbelievable logic patterns.",
+        badgeColor: "text-cyan-400 font-bold"
+      }
+    ];
+
+    const DEFAULT_STUDIO_REVIEWS = [
+      {
+        user: "@CommunityManager_X",
+        stars: 5,
+        msg: "Gabriel developed a fully customized automation bot for our network. Overhead dropped completely and response loops are incredibly fast.",
+        badgeColor: "text-cyan-400 font-bold"
+      },
+      {
+        user: "@DevCore_Alpha",
+        stars: 5,
+        msg: "The code modularity in his Node.js layouts is pristine. Clean background queues mean no server lag spikes even at scale.",
+        badgeColor: "text-purple-400 font-bold"
+      }
+    ];
+
+    // RANDOM PLAYLIST AUDIOS MATRIX DATA CONTAINER
+    const audioPlaylist = [
+      {
+        title: "Share",
+        genre: "Bass Trap / Low-Latency",
+        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      {
+        title: "Your",
+        genre: "Ambient Synth / Lofi Chillers",
+        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      },
+      {
+        title: "Playlists!",
+        genre: "Intelligent DnB / Fast Processing",
+        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      }
+    ];
+
+    let currentGlobalView = 'identity';
+    let currentProjectSectionFilter = 'popular';
+    let connectedSessionOperator = null;
+    let currentTrackPointer = 0;
+    let trackStatePlaybackActive = false;
+    let selectedSimulatorCommandKey = 'add-status';
+
+    // AUDIO DOM INTERACTION OBJECT REFERENCES
+    const audioEngine = document.getElementById('core-audio-engine');
+    const playBtn = document.getElementById('trigger-play');
+    const playIcon = document.getElementById('trigger-icon');
+    const titleText = document.getElementById('display-title');
+    const genreText = document.getElementById('display-genre');
+    const progressFill = document.getElementById('track-progress-fill');
+    const progressWrap = document.getElementById('track-progress-wrapper');
+    const timeCurrent = document.getElementById('track-time-current');
+    const timeDuration = document.getElementById('track-time-duration');
+    const playlistDOMContainer = document.getElementById('render-playlist-tracks');
+
+    // --- NAVIGATION VIEW ENGINE DISPATCH CONTROLS ---
+    function switchView(viewName) {
+      currentGlobalView = viewName;
+      document.querySelectorAll('.view-pane').forEach(view => {
+        view.classList.add('hidden');
+        view.classList.remove('active-view');
+      });
+      document.querySelectorAll('nav button').forEach(tab => {
+        tab.classList.remove('active-tab');
+      });
+
+      const targetViewNode = document.getElementById(`view-${viewName}`);
+      if (targetViewNode) {
+        targetViewNode.classList.remove('hidden');
+        setTimeout(() => { targetViewNode.classList.add('active-view'); }, 40);
+      }
+      
+      const targetTabButton = document.getElementById(`tab-${viewName}`);
+      if (targetTabButton) { targetTabButton.classList.add('active-tab'); }
+      if (viewName === 'library') { setProjectSectionFilter(currentProjectSectionFilter); }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- PROJECT GALLERY SECTION SWITCHING ---
+    function setProjectSectionFilter(sectionName) {
+      currentProjectSectionFilter = sectionName;
+      document.getElementById('filter-btn-popular').classList.remove('active-filter');
+      document.getElementById('filter-btn-all').classList.remove('active-filter');
+      document.getElementById(`filter-btn-${sectionName}`).classList.add('active-filter');
+      executeSearchMatrix();
+    }
+
+    // --- BURGER MENU HOOKS ---
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    menuToggle.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+    function toggleMobileMenu() { mobileMenu.classList.add("hidden"); }
+
+    // --- CORES CODE RUNTIME MATRIX SYSTEM SEARCH SEARCH FILTER ---
+    function executeSearchMatrix() {
+      const searchInputValue = document.getElementById('library-search').value.toLowerCase().trim();
+      const projectCardWrappers = document.querySelectorAll('.library-card-wrapper');
+      const emptyAlertBox = document.getElementById('search-empty-alert');
+      let registeredMatches = 0;
+
+      projectCardWrappers.forEach(card => {
+        const cardSection = card.getAttribute('data-section');
+        const structuralMetadata = card.getAttribute('data-name');
+        if (!structuralMetadata) return;
+        const matchesSearch = structuralMetadata.includes(searchInputValue);
+        const matchesSection = (currentProjectSectionFilter === 'all') || (cardSection === 'popular');
+
+        if (matchesSearch && matchesSection) {
+          card.style.display = "flex";
+          registeredMatches++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+      if(emptyAlertBox) emptyAlertBox.style.display = (registeredMatches === 0) ? "block" : "none";
+    }
+
+    // --- MODAL LAYER GATE ACCESSIBILITY DISPATCHERS ---
+    function toggleAuthModal(isVisible) {
+      const modal = document.getElementById('auth-modal-overlay');
+      if (isVisible) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function processClientAuthentication(event) {
+      event.preventDefault();
+      const operatorInput = document.getElementById('auth-username').value.trim();
+      if (operatorInput) {
+        connectedSessionOperator = operatorInput.startsWith('@') ? operatorInput : `@${operatorInput}`;
+        
+        // Update globally across UI views
+        document.querySelectorAll('#auth-user-badge').forEach(el => {
+          el.classList.remove('hidden');
+          el.classList.add('flex');
+        });
+        document.querySelectorAll('#auth-modal-trigger').forEach(el => el.classList.add('hidden'));
+        
+        // Server tab updates
+        if(document.getElementById('review-lockout-alert')) document.getElementById('review-lockout-alert').classList.add('hidden');
+        if(document.getElementById('review-active-signature')) document.getElementById('review-active-signature').innerText = connectedSessionOperator;
+        if(document.getElementById('review-submission-form')) document.getElementById('review-submission-form').classList.remove('hidden');
+        
+        // Identity tab updates
+        if(document.getElementById('studio-review-lockout')) document.getElementById('studio-review-lockout').classList.add('hidden');
+        if(document.getElementById('studio-review-active-sig')) document.getElementById('studio-review-active-sig').innerText = connectedSessionOperator;
+        if(document.getElementById('studio-review-form')) document.getElementById('studio-review-form').classList.remove('hidden');
+        
+        toggleAuthModal(false);
+      }
+    }
+
+    // --- RUN-TIME LOCAL STORAGE ATTACHMENT PERSISTENCE LAYER ---
+    function getStoredData(key, fallback) {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : fallback;
+    }
+
+    // --- INTERACTIVE SIMULATOR RUNTIME LOGIC ---
+    const commandConfigurations = {
+      'add-status': {
+        title: "ASAP Status Module",
+        desc: "Simulates the automatic reward dispatcher detecting a vanity server link inside a target user's custom status block.",
+        logs: [
+          { type: 'input', text: "system@gt_studios:~$ /add-status phrase:\"discord.gg/gQg4ps2Fen\" reward_role:\"@Verified Supporter\"" },
+          { type: 'process', text: "[MATRIX_LOAD] Initializing event scanner routing path..." },
+          { type: 'success', text: "✔ [ASAP Status Bot]: Monitoring framework updated. Scanning active gateway nodes." },
+          { type: 'bot', text: "🤖 ASAP Status Bot: \"Added role @Verified Supporter to user @GoatVibes (Detected link status change)\"" }
+        ]
+      },
+      'firewall': {
+        title: "True Security Firewall",
+        desc: "Simulates perimeter protection interception protocols shutting down unauthorized logic manipulations or admin configurations.",
+        logs: [
+          { type: 'input', text: "system@gt_studios:~$ /firewall-status zone:\"perimeter_01\" action:\"audit\"" },
+          { type: 'process', text: "[SECURITY_LOAD] Parsing encryption keys over gateway dispatch grids..." },
+          { type: 'success', text: "✔ [True Security]: Core structural protection metrics evaluated." },
+          { type: 'bot', text: "🛡 True Security: \"System Matrix Secure. Intercepted 0 token leakage configurations. Isolation nodes active.\"" }
+        ]
+      }
+    };
+
+    function selectSimulatedCommand(key) {
+      selectedSimulatorCommandKey = key;
+      const config = commandConfigurations[key];
+      document.getElementById('sim-title').innerText = config.title;
+      document.getElementById('sim-description').innerText = config.desc;
+      
+      const statusBtn = document.getElementById('btn-sim-status');
+      const firewallBtn = document.getElementById('btn-sim-firewall');
+      
+      if (key === 'add-status') {
+        statusBtn.className = "px-4 py-2 text-xs font-bold border border-cyan-400 text-cyan-400 rounded-full bg-cyan-950/20 shadow-[0_0_15px_rgba(0,242,255,0.1)] transition-all";
+        firewallBtn.className = "px-4 py-2 text-xs font-bold border border-white/10 text-gray-400 rounded-full hover:border-purple-400 hover:text-purple-400 transition-all";
+      } else {
+        firewallBtn.className = "px-4 py-2 text-xs font-bold border border-purple-400 text-purple-400 rounded-full bg-purple-950/20 shadow-[0_0_15px_rgba(189,0,255,0.1)] transition-all";
+        statusBtn.className = "px-4 py-2 text-xs font-bold border border-white/10 text-gray-400 rounded-full hover:border-cyan-400 hover:text-cyan-400 transition-all";
+      }
+    }
+
+    function executeSimulatedCommand() {
+      const terminal = document.getElementById('simulator-terminal-feed');
+      terminal.innerHTML = '';
+      const logs = commandConfigurations[selectedSimulatorCommandKey].logs;
+      
+      logs.forEach((log, index) => {
+        setTimeout(() => {
+          const row = document.createElement('div');
+          if (log.type === 'input') row.className = "text-white font-bold";
+          else if (log.type === 'process') row.className = "text-zinc-500 italic";
+          else if (log.type === 'success') row.className = "text-emerald-400 font-medium";
+          else if (log.type === 'bot') row.className = "text-cyan-300 font-bold pl-2 border-l border-cyan-500/40";
+          
+          row.innerText = log.text;
+          terminal.appendChild(row);
+          terminal.scrollTop = terminal.scrollHeight;
+        }, index * 700);
+      });
+    }
+
+    function updateStoredData(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    // --- ACOUSTIC SHOWCASE AUDIO EMBED PLAYER CONTROLS ---
+    function renderPlaylistViewDOM() {
+      if(!playlistDOMContainer) return;
+      playlistDOMContainer.innerHTML = '';
+      audioPlaylist.forEach((track, idx) => {
+        const trackRow = document.createElement('div');
+        trackRow.className = `flex justify-between items-center py-2.5 px-4 rounded-xl cursor-pointer transition-all duration-200 font-mono text-xs ${idx === currentTrackPointer ? 'text-cyan-400 font-bold bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'}`;
+        trackRow.innerHTML = `
+          <div class="flex items-center gap-3 truncate">
+            <span class="opacity-40">0${idx + 1}</span>
+            <span class="truncate">${track.title}</span>
+          </div>
+          <span class="text-[10px] opacity-40 uppercase tracking-widest shrink-0 pl-2">${track.genre}</span>
+        `;
+        trackRow.addEventListener('click', () => {
+          currentTrackPointer = idx;
+          initializeTargetAudioTrack(currentTrackPointer);
+          executePlaybackOnEngine();
+        });
+        playlistDOMContainer.appendChild(trackRow);
+      });
+    }
+
+    function initializeTargetAudioTrack(idx) {
+      if(!audioEngine) return;
+      audioEngine.src = audioPlaylist[idx].url;
+      if(titleText) titleText.textContent = audioPlaylist[idx].title;
+      if(genreText) genreText.textContent = audioPlaylist[idx].genre;
+      if(progressFill) progressFill.style.width = '0%';
+      if(timeCurrent) timeCurrent.textContent = '0:00';
+      if(timeDuration) timeDuration.textContent = '0:00';
+      renderPlaylistViewDOM();
+    }
+
+    function triggerPlaybackToggle() {
+      if (trackStatePlaybackActive) {
+        haltPlaybackOnEngine();
+      } else {
+        executePlaybackOnEngine();
+      }
+    }
+
+    function executePlaybackOnEngine() {
+      if(!audioEngine) return;
+      audioEngine.play().then(() => {
+        trackStatePlaybackActive = true;
+        if(playIcon) playIcon.className = "fas fa-pause";
+      }).catch(() => console.log("System Note: Track loaded under localized audio pipeline boundaries."));
+    }
+
+    function haltPlaybackOnEngine() {
+      if(!audioEngine) return;
+      audioEngine.pause();
+      trackStatePlaybackActive = false;
+      if(playIcon) playIcon.className = "fas fa-play ml-0.5";
+    }
+
+    function convertDurationSecsToTimestamp(secondsParam) {
+      if (isNaN(secondsParam)) return '0:00';
+      const m = Math.floor(secondsParam / 60);
+      const s = Math.floor(secondsParam % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    if(audioEngine) {
+      audioEngine.addEventListener('timeupdate', () => {
+        const percentage = audioEngine.currentTime / audioEngine.duration;
+        if(progressFill) progressFill.style.width = `${percentage * 100}%`;
+        if(timeCurrent) timeCurrent.textContent = convertDurationSecsToTimestamp(audioEngine.currentTime);
+      });
+
+      audioEngine.addEventListener('loadedmetadata', () => {
+        if(timeDuration) timeDuration.textContent = convertDurationSecsToTimestamp(audioEngine.duration);
+      });
+
+      audioEngine.addEventListener('ended', () => {
+        currentTrackPointer = (currentTrackPointer + 1) % audioPlaylist.length;
+        initializeTargetAudioTrack(currentTrackPointer);
+        executePlaybackOnEngine();
+      });
+    }
+
+    if(progressWrap) {
+      progressWrap.addEventListener('click', (e) => {
+        const totalWidth = progressWrap.clientWidth;
+        const offsetX = e.offsetX;
+        const jumpTo = (offsetX / totalWidth) * audioEngine.duration;
+        if (!isNaN(jumpTo)) { audioEngine.currentTime = jumpTo; }
+      });
+    }
+
+    if(document.getElementById('trigger-prev')) {
+      document.getElementById('trigger-prev').addEventListener('click', () => {
+        currentTrackPointer = (currentTrackPointer - 1 + audioPlaylist.length) % audioPlaylist.length;
+        initializeTargetAudioTrack(currentTrackPointer);
+        if (trackStatePlaybackActive) executePlaybackOnEngine();
+      });
+    }
+
+    if(document.getElementById('trigger-next')) {
+      document.getElementById('trigger-next').addEventListener('click', () => {
+        currentTrackPointer = (currentTrackPointer + 1) % audioPlaylist.length;
+        initializeTargetAudioTrack(currentTrackPointer);
+        if (trackStatePlaybackActive) executePlaybackOnEngine();
+      });
+    }
+
+    if(playBtn) playBtn.addEventListener('click', triggerPlaybackToggle);
+
+    // --- SYSTEM SIMULATED TERMINAL TEXT ENGINE CHAT RELAY ---
+    const userHandleMockPool = ['@GoatVibes', '@Xp_Maxxer', '@FmBotScrobbler', '@LofiChatter', '@PremiumTools', '@SovereignUser', '@CarlBotFan'];
+    const textDialogueMockPool = [
+      "Yo! The music bot panel response rate is crazy, track updates are seamless.",
+      "Has anyone tracked weekly FM bot charts yet? Leveling rankings just hit tier 5.",
+      "Love that no verification required means skipping complex gate screens.",
+      "Just set up my self roles inside the profile registry, customization paths are clean.",
+      "Anyone hopping into Rythm VC channel right now? Let's drop some sound streams.",
+      "The free ipa's drop inside tools works perfectly, setup tutorial is hyper precise."
+    ];
+
+    const targetTerminalElement = document.getElementById('live-chat-terminal');
+
+    function createLiveChatRowElement(userStr, dialogueStr, isBootstrapPhase = false) {
+      if(!targetTerminalElement) return;
+      const rowItem = document.createElement('div');
+      rowItem.className = "transition-all duration-700 opacity-0 transform translate-y-3 pb-1 border-b border-white/5 flex gap-2 items-start";
+      const colorTag = userStr.length % 2 === 0 ? 'text-purple-400' : 'text-cyan-400';
+      
+      rowItem.innerHTML = `<span class="${colorTag} font-bold shrink-0">${userStr}:</span><span class="text-gray-300">${dialogueStr}</span>`;
+      targetTerminalElement.appendChild(rowItem);
+      
+      if (!isBootstrapPhase) {
+        setTimeout(() => {
+          rowItem.classList.remove('opacity-0', 'translate-y-3');
+          targetTerminalElement.scrollTop = targetTerminalElement.scrollHeight;
+        }, 30);
+        if (targetTerminalElement.children.length > 15) { targetTerminalElement.removeChild(targetTerminalElement.firstChild); }
+      } else {
+        rowItem.classList.remove('opacity-0', 'translate-y-3');
+      }
+    }
+
+    // Initialize text elements
+    for (let i = 0; i < 3; i++) { createLiveChatRowElement(userHandleMockPool[i], textDialogueMockPool[i], true); }
+    if(targetTerminalElement) targetTerminalElement.scrollTop = targetTerminalElement.scrollHeight;
+
+    setInterval(() => {
+      const randUser = userHandleMockPool[Math.floor(Math.random() * userHandleMockPool.length)];
+      const randText = textDialogueMockPool[Math.floor(Math.random() * textDialogueMockPool.length)];
+      createLiveChatRowElement(randUser, randText);
+    }, 5000);
+
+    // --- RENDER DYNAMIC SYSTEM EVALUATION DATABASE LOG LAYOUTS ---
+    function initDatabaseLayout() {
+      const dbReactions = getStoredData('gts_project_reactions', DEFAULT_REACTIONS);
+      Object.keys(dbReactions).forEach(id => {
+        const likeEl = document.getElementById(`like-count-${id}`);
+        const dislikeEl = document.getElementById(`dislike-count-${id}`);
+        if(likeEl) likeEl.innerText = dbReactions[id].like;
+        if(dislikeEl) dislikeEl.innerText = dbReactions[id].dislike;
+        
+        const clientVotes = getStoredData('gts_user_votes', {});
+        if (clientVotes[id]) {
+          const cluster = document.getElementById(`reaction-cluster-${id}`);
+          if (cluster) cluster.classList.add('opacity-40', 'pointer-events-none');
+        }
+      });
+
+      // Render Server Hub Reviews
+      const dbReviews = getStoredData('gts_client_reviews', DEFAULT_REVIEWS);
+      const feedContainer = document.getElementById('reviews-feed-container');
+      if(feedContainer) {
+        feedContainer.innerHTML = '';
+        dbReviews.forEach(item => {
+          let textStars = '';
+          for(let i=0; i < 5; i++) {
+            textStars += `<i class="fas fa-star ${i < item.stars ? 'text-yellow-400' : 'text-zinc-700'}"></i>`;
+          }
+          const rowNode = document.createElement('div');
+          rowNode.className = "pt-5 first:pt-0 font-mono text-xs space-y-1.5 transition-all duration-500";
+          rowNode.innerHTML = `
+            <div class="flex justify-between items-center">
+              <span class="${item.badgeColor || 'text-cyan-400 font-bold'}">${item.user}</span>
+              <span class="text-[9px]">${textStars}</span>
+            </div>
+            <p class="text-gray-400 italic font-sans leading-relaxed">"${item.msg}"</p>
+          `;
+          feedContainer.appendChild(rowNode);
+        });
+      }
+
+      // Render Identity Tab Studio Reviews
+      const dbStudioReviews = getStoredData('gts_studio_reviews', DEFAULT_STUDIO_REVIEWS);
+      const studioFeedContainer = document.getElementById('studio-reviews-feed');
+      if(studioFeedContainer) {
+        studioFeedContainer.innerHTML = '';
+        dbStudioReviews.forEach(item => {
+          let textStars = '';
+          for(let i=0; i < 5; i++) {
+            textStars += `<i class="fas fa-star ${i < item.stars ? 'text-yellow-400' : 'text-zinc-700'}"></i>`;
+          }
+          const rowNode = document.createElement('div');
+          rowNode.className = "pt-5 first:pt-0 font-mono text-xs space-y-1.5 transition-all duration-500";
+          rowNode.innerHTML = `
+            <div class="flex justify-between items-center">
+              <span class="${item.badgeColor || 'text-purple-400 font-bold'}">${item.user}</span>
+              <span class="text-[9px]">${textStars}</span>
+            </div>
+            <p class="text-gray-400 italic font-sans leading-relaxed">"${item.msg}"</p>
+          `;
+          studioFeedContainer.appendChild(rowNode);
+        });
+      }
+    }
+
+    // --- REACTION METRICS ACTION RIGGERS ---
+    function triggerReactionControl(projectId, reactionType) {
+      const clientVotes = getStoredData('gts_user_votes', {});
+      if (clientVotes[projectId]) return;
+
+      const dbReactions = getStoredData('gts_project_reactions', DEFAULT_REACTIONS);
+      if (dbReactions[projectId]) {
+        dbReactions[projectId][reactionType]++;
+        updateStoredData('gts_project_reactions', dbReactions);
+        clientVotes[projectId] = reactionType;
+        updateStoredData('gts_user_votes', clientVotes);
+        
+        const targetOutputNode = document.getElementById(`${reactionType}-count-${projectId}`);
+        if (targetOutputNode) { targetOutputNode.innerText = dbReactions[projectId][reactionType]; }
+        
+        const cluster = document.getElementById(`reaction-cluster-${projectId}`);
+        if (cluster) cluster.classList.add('opacity-40', 'pointer-events-none');
+      }
+    }
+
+    // --- DYNAMIC REVIEW FORM INJECTION CONTROLLER ---
+    function appendUserReviewNode(event) {
+      event.preventDefault();
+      if (!connectedSessionOperator) return;
+
+      const scoreValue = parseInt(document.getElementById('review-rating-stars').value);
+      const userTextValue = document.getElementById('review-message').value.trim();
+      if (!userTextValue) return;
+
+      const dbReviews = getStoredData('gts_client_reviews', DEFAULT_REVIEWS);
+      const newReviewData = {
+        user: connectedSessionOperator,
+        stars: scoreValue,
+        msg: userTextValue,
+        badgeColor: "text-cyan-400 font-bold"
+      };
+      
+      dbReviews.unshift(newReviewData);
+      updateStoredData('gts_client_reviews', dbReviews);
+      initDatabaseLayout();
+
+      document.getElementById('review-message').value = '';
+      document.getElementById('reviews-sector-anchor').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function appendStudioReviewNode(event) {
+      event.preventDefault();
+      if (!connectedSessionOperator) return;
+
+      const scoreValue = parseInt(document.getElementById('studio-review-stars').value);
+      const userTextValue = document.getElementById('studio-review-message').value.trim();
+      if (!userTextValue) return;
+
+      const dbStudioReviews = getStoredData('gts_studio_reviews', DEFAULT_STUDIO_REVIEWS);
+      const newReviewData = {
+        user: connectedSessionOperator,
+        stars: scoreValue,
+        msg: userTextValue,
+        badgeColor: "text-purple-400 font-bold"
+      };
+      
+      dbStudioReviews.unshift(newReviewData);
+      updateStoredData('gts_studio_reviews', dbStudioReviews);
+      initDatabaseLayout();
+
+      document.getElementById('studio-review-message').value = '';
+    }
+
+    // Fire engines cleanly on initialization lifecycle events
+    window.addEventListener('DOMContentLoaded', () => {
+      initDatabaseLayout();
+      initializeTargetAudioTrack(currentTrackPointer);
+      switchView('identity');
+    });
+  </script>
+</body>
+</html>
